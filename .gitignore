@@ -1,0 +1,7 @@
+node_modules
+.editorconfig
+.idea
+yarn.lock
+package-lock.json
+angular-cli.json
+e2e

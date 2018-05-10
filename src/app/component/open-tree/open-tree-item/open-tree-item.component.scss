@@ -1,0 +1,25 @@
+.tree-item-children {
+	padding-left : 30px;
+}
+
+.tree-item {
+
+	/deep/ > .tree-item-header {
+		display     : flex;
+		flex-flow   : row nowrap;
+		align-items : center;
+		/deep/ > .item-fold {
+			min-width     : 30px;
+			max-width     : 30px;
+			flex-shrink   : 0;
+		}
+		/deep/ > .item-op {
+			flex-shrink : 0;
+			padding     : 5px 10px;
+		}
+		/deep/ > .item-full {
+			flex-grow : 1;
+			padding   : 5px 10px;
+		}
+	}
+}

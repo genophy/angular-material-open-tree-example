@@ -1,10 +1,12 @@
-# Matdemo
+# angular-material-open-tree-example
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
+## 效果
+<img src="screenshot/screenshot01.png" width="300"/>
 
 ## 建立
 ```bash
-ng new crm-angular --routing --style scss --skip-git --skip-install --skip-tests --version 1.0.0
+ng new angular-material-open-tree-example --routing --style scss --skip-git --skip-install --skip-tests --version 1.0.0
 ```
 
 ## 必须包

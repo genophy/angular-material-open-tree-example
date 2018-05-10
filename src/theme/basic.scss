@@ -1,0 +1,389 @@
+// colors Maps
+$colors: (
+        "dark":#222,
+        "text":#393d41,
+        "white":#fff,
+        "light":#fafafa,
+        "gray":#999,
+        "gray-light":#ddd,
+        "gray-light-soft":#f3f3f3,
+        "blue-dark":#0e4f75,
+        'blue-dark-light':#069,
+        "blue":#009afb,
+        "blue-light":#0cf,
+        "red":#b14546,
+        "yellow":#e8bf6a,
+        "yellow-light":#ffffe2,
+        "danger":red
+);
+
+@function named($key) {
+  @return "["+ $key+"],." + $key;
+}
+
+#{named(flex-row)} {
+  display: flex;
+  flex-direction: row;
+}
+
+#{named(flex-column)} {
+  display: flex;
+  flex-direction: column;
+}
+
+#{named(flex-wrap)} {
+  flex-wrap: wrap;
+}
+
+#{named(flex-grow)} {
+  flex-grow: 1;
+}
+
+#{named(flex-shrink)} {
+  flex-shrink: 0;
+}
+
+#{named(justify-content-center)} {
+  justify-content: center;
+}
+
+#{named(justify-items-center)} {
+  justify-items: center;
+}
+
+#{named(justify-space-between)} {
+  justify-content: space-between;
+}
+
+#{named(justify-space-around)} {
+  justify-content: space-around;
+}
+
+#{named(align-items-center)} {
+  align-items: center;
+}
+
+#{named(align-self-center)} {
+  align-self: center;
+}
+
+$borderType: (
+        border-a:border,
+        border-l:border-left,
+        border-r:border-right,
+        border-t:border-top,
+        border-b:border-bottom
+);
+
+/*loop:colors*/
+@each $colorK, $colorV in $colors {
+  #{named(color-#{$colorK})} {
+    color: $colorV !important;
+  }
+  #{named(bg-color-#{$colorK})} {
+    background-color: $colorV !important;
+  }
+
+  @each $borderK, $borderV in $borderType {
+    #{named(#{$borderK}-#{$colorK})} {
+      #{$borderV}-color: $colorV !important;
+      #{$borderV}-style: solid;
+      #{$borderV}-width: thin;
+    }
+  }
+
+  #{named(border-v-#{$colorK})} {
+    border-top-color: $colorV !important;
+    border-top-style: solid;
+    border-top-width: thin;
+    border-bottom-color: $colorV !important;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+  }
+  #{named(border-h-#{$colorK})} {
+    border-left-color: $colorV !important;
+    border-left-style: solid;
+    border-left-width: thin;
+    border-right-color: $colorV !important;
+    border-right-style: solid;
+    border-right-width: thin;
+  }
+}
+
+// font size Maps
+$fontSize: (
+        60:60px,
+        40:40px,
+        36:36px,
+        32:32px,
+        28:28px,
+        24:24px,
+        20:20px,
+        18:18px,
+        16:16px,
+        14:14px,
+        12:12px,
+        10:10px
+);
+/*loop:font-size , line-height*/
+@each $fontK, $fontV in $fontSize {
+  #{named(font-size-#{$fontK})} {
+    font-size: $fontV
+  }
+}
+
+#{named(font-bold)} {
+  font-weight: bold;
+}
+
+#{named(font-bolder)} {
+  font-weight: bolder;
+}
+
+// space Size Maps
+$spaceSize: (
+        200:200px,
+        150:150px,
+        120:120px,
+        100:100px,
+        80:80px,
+        50:50px,
+        30:30px,
+        20:20px,
+        15:15px,
+        10:10px,
+        5:5px,
+        2:2px
+);
+$spaceType: (
+        p-a:padding,
+        p-l:padding-left,
+        p-r:padding-right,
+        p-t:padding-top,
+        p-b:padding-bottom,
+        m-a:margin,
+        m-l:margin-left,
+        m-r:margin-right,
+        m-t:margin-top,
+        m-b:margin-bottom
+);
+
+/*loop:spaceSize*/
+@each $sizeK, $sizeV in $spaceSize {
+  // m-a-normal => margin:15px;
+  @each $typeK, $typeV in $spaceType {
+    #{named(#{$typeK}-#{$sizeK})} {
+      #{$typeV}: $sizeV;
+    }
+  }
+  #{named(p-h-#{$sizeK})} {
+    padding-left: $sizeV;
+    padding-right: $sizeV;
+  }
+  #{named(p-v-#{$sizeK})} {
+    padding-top: $sizeV;
+    padding-bottom: $sizeV;
+  }
+  #{named(m-h-#{$sizeK})} {
+    margin-left: $sizeV;
+    margin-right: $sizeV;
+  }
+  #{named(m-v-#{$sizeK})} {
+    margin-top: $sizeV;
+    margin-bottom: $sizeV;
+  }
+}
+
+#{named(m-auto)} {
+  margin: auto;
+}
+
+// layout Maps
+$layoutType: (
+        w:width,
+        w-max:max-width,
+        w-min:min-width,
+        h:height,
+        h-max:max-height,
+        h-min:min-height,
+        line-h:line-height
+);
+
+/*loop:layout size*/
+@for $n from 1 through 10 {
+  // w-5 ==> width:5px; ...w-50 ,step 5
+  @each $layoutK, $layoutV in $layoutType {
+    #{named(#{$layoutK}-#{$n*5})} {
+      #{$layoutV}: $n*5px;
+    }
+  }
+
+  // w-60 => width:50px; ...w-150 , step 10
+  @each $layoutK, $layoutV in $layoutType {
+    #{named(#{$layoutK}-#{$n*10 + 50})} {
+      #{$layoutV}: $n*10px + 50px;
+    }
+  }
+
+  // w-200 => width:200px; ...w-650 , step 50
+  @each $layoutK, $layoutV in $layoutType {
+    #{named(#{$layoutK}-#{($n*50)+150})} {
+      #{$layoutV}: ($n*50px) + 150px;
+    }
+  }
+
+  // w-200 => width:700px; ...w-1600 , step 100
+  @each $layoutK, $layoutV in $layoutType {
+    #{named(#{$layoutK}-#{($n*100)+600})} {
+      #{$layoutV}: ($n*100px) + 600px;
+    }
+  }
+
+  // w-p-10 => width:10%;
+  @each $layoutK, $layoutV in $layoutType {
+    #{named(#{$layoutK}-per-#{$n*10})} {
+      #{$layoutV}: $n * 10%;
+    }
+  }
+
+  // m-a-p-10 => margin:10%;
+  @each $typeK, $typeV in $spaceType {
+    #{named(#{$typeK}-per-#{$n*10})} {
+      #{$typeV} : $n * 10%;
+    }
+  }
+
+  #{named(p-h-per-#{$n*10})} {
+    padding-left: $n * 10%;
+    padding-right: $n * 10%;
+  }
+  #{named(p-v-per-#{$n*10})} {
+    padding-top: $n * 10%;
+    padding-bottom: $n * 10%;
+  }
+  #{named(m-h-per-#{$n*10})} {
+    margin-left: $n * 10%;
+    margin-right: $n * 10%;
+  }
+  #{named(m-v-per-#{$n*10})} {
+    margin-top: $n * 10%;
+    margin-bottom: $n * 10%;
+  }
+}
+
+#{named(w-auto)} {
+  width: auto !important;
+}
+
+#{named(h-auto)} {
+  height: auto !important;
+}
+
+/* 末尾溢出省略号, 1 到 10行 */
+@for $n from 1 through 10 {
+  #{named(line-#{$n})} {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: $n !important;
+    overflow: hidden !important;
+  }
+}
+
+#{named(text-center)} {
+  text-align: center;
+}
+
+#{named(text-left)} {
+  text-align: left;
+}
+
+#{named(text-right)} {
+  text-align: right;
+}
+
+#{named(visibility-hidden)} {
+  visibility: hidden;
+}
+
+#{named(hidden)} {
+  display: none;
+}
+
+#{named(no-overflow)} {
+  overflow: hidden;
+}
+
+#{named(no-border)} {
+  border: none;
+}
+
+#{named(word-break)} {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: initial;
+}
+
+#{named(img-cover-wrap)} {
+  overflow: hidden;
+  #{named(img-cover)} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+#{named(overflow)} {
+  overflow: auto;
+}
+
+#{named(overflow-scroll)} {
+  overflow: scroll;
+}
+
+#{named(overflow-y)} {
+  overflow-y: auto;
+}
+
+#{named(overflow-y-scroll)} {
+  overflow-y: scroll;
+}
+
+#{named(position-relative)} {
+  position: relative;
+}
+
+#{named(position-absolute)} {
+  position: absolute;
+}
+
+#{named(cursor-pointer)} {
+  cursor: pointer;
+}
+
+#{named(cursor-pointer-text-blue)} {
+  color: #009afb;
+  cursor: pointer;
+  &:hover {
+    color: #069;
+  }
+}
+
+#{named(sub-title-split)} {
+  @extend .font-bold, .bg-color-yellow-light, .p-h-10, .p-v-5, .border-v-gray-light
+}
+
+#{named(table)} {
+  display: table;
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse;
+}
+
+#{named(table-row)} {
+  display: table-row;
+}
+
+#{named(table-cell)} {
+  display: table-cell;
+  @extend .word-break;
+}
