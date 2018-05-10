@@ -237,7 +237,7 @@ export class OpenTreeItemComponent implements OnInit {
 	 * @param {boolean} checked
 	 * @param {boolean} childChange
 	 */
-	btnToggleCheckbox(item: OpenTreeObj, checked: boolean, childChange: boolean = false) {
+	toggleCheckbox(item: OpenTreeObj, checked: boolean, childChange: boolean = false) {
 
 		this.itemIterationForUpdateChecked(item, checked, childChange);
 		this.sendAllChildCheckStatusEvent();

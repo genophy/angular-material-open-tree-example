@@ -9,7 +9,7 @@
 				</button>
 			</div>
 			<div class="open-tree-item-op" *ngIf="checkboxAble">
-				<mat-checkbox color="primary" [checked]="item.checked" (change)="btnToggleCheckbox(item,$event.checked,true)"></mat-checkbox>
+				<mat-checkbox color="primary" [checked]="item.checked" (change)="toggleCheckbox(item,$event.checked,true)"></mat-checkbox>
 			</div>
 			<div class="open-tree-item-op" cursor-pointer (click)="btnItemClick(item)">
 				{{item.name}}
@@ -58,8 +58,9 @@
 				[handlerAdd]="handlerAdd"
 				[handlerRemove]="handlerRemove"
 				[childrenHierarchy]="childrenHierarchy?childrenHierarchy-1:childrenHierarchy"
+				[checkboxAble]="checkboxAble"
 				(treeListChanged)="changeItemTreeList(item,$event)"
-				(allCheckedChanged)="itemIterationForUpdateChecked(item,$event)"></crm-open-tree-item>
+				(allCheckedChanged)="toggleCheckbox(item,$event)"></crm-open-tree-item>
 		</div>
 	</div>
 	<!-- 增加的节点 -->
