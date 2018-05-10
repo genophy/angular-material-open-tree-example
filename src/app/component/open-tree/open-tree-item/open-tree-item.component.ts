@@ -1,10 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {OpenTreeObj}                                    from './open-tree-obj';
+
+import {OpenTreeObj} from './open-tree-obj';
 
 @Component({
-	selector   : 'crm-open-tree-item',
+	selector: 'crm-open-tree-item',
 	templateUrl: './open-tree-item.component.html',
-	styleUrls  : ['./open-tree-item.component.scss']
+	styleUrls: ['./open-tree-item.component.scss']
 })
 export class OpenTreeItemComponent implements OnInit {
 	/**
@@ -28,14 +29,14 @@ export class OpenTreeItemComponent implements OnInit {
 	@Input() checkboxAble = false;
 
 	/**
-	 * 修改方法. 返回true表示，可以修改。参数item:OpenTreeObj
-	 */
-	@Input() handlerModify: Function;
-
-	/**
 	 * 增加方法. 返回true表示，可以增加。参数item:OpenTreeObj
 	 */
 	@Input() handlerAdd: Function;
+
+	/**
+	 * 修改方法. 返回true表示，可以修改。参数item:OpenTreeObj
+	 */
+	@Input() handlerModify: Function;
 
 	/**
 	 * 删除方法. 返回true表示，可以删除。参数item:OpenTreeObj
@@ -69,10 +70,22 @@ export class OpenTreeItemComponent implements OnInit {
 	 */
 	_nameForModify;
 
+	/**
+	 * 是否可增加
+	 * @type {boolean}
+	 */
 	_addAble = false;
 
+	/**
+	 * 是否可编辑
+	 * @type {boolean}
+	 */
 	_editAble = false;
 
+	/**
+	 * 是否可删除
+	 * @type {boolean}
+	 */
 	_removeAble = false;
 
 	/**
@@ -82,6 +95,9 @@ export class OpenTreeItemComponent implements OnInit {
 
 	}
 
+	/**
+	 * 初始化
+	 */
 	ngOnInit() {
 
 		if ('function' === typeof this.handlerAdd) {
@@ -103,7 +119,7 @@ export class OpenTreeItemComponent implements OnInit {
 	}
 
 	/**
-	 *
+	 * 重组新的item
 	 * @param {OpenTreeObj} item
 	 * @returns {any}
 	 */
@@ -118,16 +134,16 @@ export class OpenTreeItemComponent implements OnInit {
 	 * @param {OpenTreeObj} item
 	 */
 	btnToggleUnFold(item: OpenTreeObj) {
-		item.isUnFold = !item.isUnFold;
+		item._toggleToUnFold = !item._toggleToUnFold;
 		// 若已经折叠起来，则子元素也折叠起来
-		if (!item.isUnFold) {
+		if (!item._toggleToUnFold) {
 			this.unFoldAllChild(item);
 		}
 	}
 
 	/**
 	 * 节点点击
-	 * @param {SugarTreeElement} item
+	 * @param {OpenTreeObj} item
 	 */
 	btnItemClick(item: OpenTreeObj) {
 		if ('function' === typeof this.handlerItemClick) {
@@ -140,25 +156,27 @@ export class OpenTreeItemComponent implements OnInit {
 	 * @param item
 	 */
 	btnAddChild(item: OpenTreeObj) {
-		item.isUnFold = true;
+
+		item._toggleToUnFold = true;
 		if (!(item.children && item.children instanceof Array)) {
 			item.children = [];
 		}
-		// 若children为空，且children最后一个元素的additionAble属性不为true,表示还没有增加。可以push
-		if (0 === item.children.length || true !== item.children[item.children.length - 1].additionAble) {
-			item.children.push(OpenTreeObj.newInstance(null, null, null, false, true));
+		// 若children为空，且children最后一个元素的toggleToAdd属性不为true,表示还没有增加。可以push
+		if (0 === item.children.length || true !== item.children[item.children.length - 1]._toggleToAdd) {
+			item.children.push(OpenTreeObj.newInstance('', null, null,
+				this._addAble, this._editAble, this._removeAble, false, true
+			));
 		}
 	}
 
 	/**
 	 * 保存子节点，用于父节点向此节点发送新增子节点(addChild)后。
 	 */
-	btnSaveChild(item) {
-		item.additionAble = false;
-		if (this._nameForAdd && this.handlerAdd(this.parentObjs, this._nameForAdd)) {
+	btnSaveChild(item: OpenTreeObj) {
+		item._toggleToAdd = false;
+		if (this._nameForAdd && this.listNotContainerName(this._nameForAdd) && this.handlerAdd &&
+			this.handlerAdd(this.parentObjs, this._nameForAdd)) {
 			item.name = this._nameForAdd;
-			// this.treeList[this.treeList.length - 1].name = this._nameForAdd;
-			// this.treeList[this.treeList.length - 1].additionAble = false;
 			this._nameForAdd = '';
 			// 新增节点，默认不会选中。所以也默认向父节点发送不选中的event
 			this.sendAllChildCheckStatusEvent();
@@ -176,18 +194,19 @@ export class OpenTreeItemComponent implements OnInit {
 	btnModifyCurrentItem(item: OpenTreeObj) {
 		// 先让同级元素的可编辑状态都置位，防止同时在同级打开多个可编辑输入框
 		for (const child of this.treeList) {
-			child.editable = false;
+			child._toggleToEdit = false;
 		}
 		this._nameForModify = item.name;
-		item.editable = true;
+		item._toggleToEdit = true;
 	}
 
 	/**
 	 * 保存当前节点，用于修改后
 	 */
 	btnSaveModifiedItem(item: OpenTreeObj) {
-		item.editable = false;
-		if (this._nameForModify && item.name !== this._nameForModify && true === this.handlerModify(this.parentObjs, item)) {
+		item._toggleToEdit = false;
+		if (this._nameForModify && item.name !== this._nameForModify && this.listNotContainerName(this._nameForModify) && true ===
+			this.handlerModify(this.parentObjs, item)) {
 			item.name = this._nameForModify;
 			this.treeListChanged.emit(this.treeList);
 		}
@@ -226,13 +245,27 @@ export class OpenTreeItemComponent implements OnInit {
 	}
 
 	/**
+	 * 列表是否不包括元素名字
+	 * @param {string} name 元素名字
+	 * @returns {boolean}
+	 */
+	private listNotContainerName(name: string) {
+		return this.treeList.every(_item => {
+			if (_item.name === name) {
+				return false;
+			}
+			return true;
+		});
+	}
+
+	/**
 	 * 折叠所有子节点
 	 * @param {OpenTreeObj} item
 	 */
 	private unFoldAllChild(item: OpenTreeObj) {
 		for (const child of item.children) {
 			if (child) {
-				child.isUnFold = false;
+				child._toggleToUnFold = false;
 				this.unFoldAllChild(child);
 			}
 		}

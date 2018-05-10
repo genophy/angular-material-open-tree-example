@@ -1,43 +1,43 @@
 <div *ngFor="let item of treeList;let idx  = index;">
-	<div class="tree-item" *ngIf="item.name">
-		<div class="tree-item-header" *ngIf="!item.editable">
-			<div class="item-fold">
+	<div class="open-tree-item" *ngIf="item.name">
+		<div class="open-tree-item-header" *ngIf="!item._toggleToEdit">
+			<div class="open-tree-item-fold">
 				<button *ngIf="item.children && 0 < item.children.length" mat-icon-button (click)="btnToggleUnFold(item)">
 					<mat-icon class="mat-icon-rtl-mirror">
-						{{item.isUnFold ? 'expand_more':'chevron_right'}}
+						{{item._toggleToUnFold ? 'expand_more':'chevron_right'}}
 					</mat-icon>
 				</button>
 			</div>
-			<div class="item-op" *ngIf="checkboxAble">
+			<div class="open-tree-item-op" *ngIf="checkboxAble">
 				<mat-checkbox color="primary" [checked]="item.checked" (change)="btnToggleCheckbox(item,$event.checked,true)"></mat-checkbox>
 			</div>
-			<div class="item-op" cursor-pointer (click)="btnItemClick(item)">
+			<div class="open-tree-item-op" cursor-pointer (click)="btnItemClick(item)">
 				{{item.name}}
 			</div>
-			<div class="item-op">
+			<div class="open-tree-item-op">
 				<!-- 新增子节点 -->
-				<button mat-icon-button (click)="btnAddChild(item)" *ngIf="_addAble && 0 !== childrenHierarchy">
+				<button mat-icon-button (click)="btnAddChild(item)" *ngIf="_addAble && item.addAble && 0 !== childrenHierarchy">
 					<mat-icon>add</mat-icon>
 				</button>
 				<!-- 编辑当前节点 -->
-				<button mat-icon-button (click)="btnModifyCurrentItem(item)" *ngIf="_editAble">
+				<button mat-icon-button (click)="btnModifyCurrentItem(item)" *ngIf="_editAble && item.editAble">
 					<mat-icon>edit</mat-icon>
 				</button>
 				<!-- 删除当前节点 -->
-				<button mat-icon-button (click)="btnRemoveCurrentItem(idx)" *ngIf="_removeAble">
+				<button mat-icon-button (click)="btnRemoveCurrentItem(idx)" *ngIf="_removeAble && item.removeAble && (this.parentObjs || 1 < this.treeList.length)">
 					<mat-icon>close</mat-icon>
 				</button>
 			</div>
 		</div>
 		<!-- 编辑当前节点 -->
-		<div class="tree-item-header" *ngIf="_editAble && item.editable">
-			<div class="tree-item">
-				<div class="tree-item-header">
-					<div class="item-fold">
+		<div class="open-tree-item-header" *ngIf="_editAble && item._toggleToEdit">
+			<div class="open-tree-item">
+				<div class="open-tree-item-header">
+					<div class="open-tree-item-fold">
 					</div>
 					<mat-form-field w-150>
 						<input matInput [(ngModel)]="_nameForModify">
-						<button mat-button *ngIf="_nameForModify" matSuffix mat-icon-button aria-label="Clear" (click)="nameForModify=''">
+						<button mat-button *ngIf="_nameForModify" matSuffix mat-icon-button aria-label="Clear" (click)="_nameForModify=''">
 							<mat-icon>close</mat-icon>
 						</button>
 					</mat-form-field>
@@ -49,30 +49,33 @@
 			</div>
 		</div>
 		<!-- 子节点 -->
-		<div class="tree-item-children" [hidden]="!item.isUnFold" *ngIf="0 !== childrenHierarchy">
-			<crm-open-tree-item [parentObjs]="parentObjs | arrayPush:pureItem(item)" [treeList]="item.children"
-								[handlerItemClick]="handlerItemClick"
-								[handlerModify]="handlerModify" [handlerAdd]="handlerAdd" [handlerRemove]="handlerRemove"
-								[childrenHierarchy]="childrenHierarchy?childrenHierarchy-1:childrenHierarchy"
-								(treeListChanged)="changeItemTreeList(item,$event)" (allCheckedChanged)="itemIterationForUpdateChecked(item,$event)"></crm-open-tree-item>
+		<div class="open-tree-item-children" [hidden]="!item._toggleToUnFold" *ngIf="0 !== childrenHierarchy">
+			<crm-open-tree-item
+				[parentObjs]="parentObjs | arrayPush:pureItem(item)"
+				[treeList]="item.children"
+				[handlerItemClick]="handlerItemClick"
+				[handlerModify]="handlerModify"
+				[handlerAdd]="handlerAdd"
+				[handlerRemove]="handlerRemove"
+				[childrenHierarchy]="childrenHierarchy?childrenHierarchy-1:childrenHierarchy"
+				(treeListChanged)="changeItemTreeList(item,$event)"
+				(allCheckedChanged)="itemIterationForUpdateChecked(item,$event)"></crm-open-tree-item>
 		</div>
 	</div>
 	<!-- 增加的节点 -->
-	<div class="tree-item-children" *ngIf="_addAble && item.additionAble">
-		<div class="tree-item">
-			<div class="tree-item-header">
-				<div class="item-fold">
-				</div>
-				<mat-form-field w-150>
-					<input matInput [(ngModel)]="_nameForAdd">
-					<button mat-button *ngIf="_nameForAdd" matSuffix mat-icon-button aria-label="Clear" (click)="nameForAdd=''">
-						<mat-icon>close</mat-icon>
-					</button>
-				</mat-form-field>
-				<button mat-icon-button (click)="btnSaveChild(item)">
-					<mat-icon>done</mat-icon>
-				</button>
+	<div class="open-tree-item" *ngIf="_addAble && item._toggleToAdd">
+		<div class="open-tree-item-header">
+			<div class="open-tree-item-fold">
 			</div>
+			<mat-form-field w-120 p-l-10>
+				<input matInput [(ngModel)]="_nameForAdd">
+				<button mat-button *ngIf="_nameForAdd" matSuffix mat-icon-button aria-label="Clear" (click)="_nameForAdd=''">
+					<mat-icon>close</mat-icon>
+				</button>
+			</mat-form-field>
+			<button mat-icon-button (click)="btnSaveChild(item)">
+				<mat-icon>done</mat-icon>
+			</button>
 		</div>
 	</div>
 </div>

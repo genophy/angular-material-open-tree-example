@@ -1,25 +1,39 @@
-.tree-item-children {
-	padding-left : 30px;
+$tree-size : 24px;
+
+.open-tree-item-children {
+	padding-left : $tree-size;
 }
-
-.tree-item {
-
-	/deep/ > .tree-item-header {
+.open-tree-item {
+	font-size : 12px;
+	.mat-icon-button {
+		width       : $tree-size !important;
+		height      : $tree-size !important;
+		line-height : $tree-size !important;
+		.mat-icon {
+			width       : $tree-size;
+			height      : $tree-size;
+			line-height : $tree-size;
+		}
+		.material-icons {
+			font-size : 18px !important;
+		}
+	}
+	/deep/ > .open-tree-item-header {
 		display     : flex;
 		flex-flow   : row nowrap;
 		align-items : center;
-		/deep/ > .item-fold {
-			min-width     : 30px;
-			max-width     : 30px;
-			flex-shrink   : 0;
-		}
-		/deep/ > .item-op {
+		line-height : $tree-size;
+		/deep/ > .open-tree-item-fold {
+			width       : $tree-size;
 			flex-shrink : 0;
-			padding     : 5px 10px;
 		}
-		/deep/ > .item-full {
+		/deep/ > .open-tree-item-op {
+			flex-shrink : 0;
+			padding     : 0px 5px;
+		}
+		/deep/ > .open-tree-item-full {
 			flex-grow : 1;
-			padding   : 5px 10px;
+			padding   : 0px 5px;
 		}
 	}
 }

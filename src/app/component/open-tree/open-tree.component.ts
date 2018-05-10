@@ -19,7 +19,7 @@ export class OpenTreeComponent implements OpenTreeHandler {
 			OpenTreeObj.newInstance('无锡', null, []),
 			OpenTreeObj.newInstance('苏州', null, []),
 			OpenTreeObj.newInstance('常州', null, [])
-		]),
+		], false, true, false),
 		OpenTreeObj.newInstance('浙江省', null, [
 			OpenTreeObj.newInstance('杭州', null, []),
 			OpenTreeObj.newInstance('景德镇', null, [])
@@ -28,28 +28,51 @@ export class OpenTreeComponent implements OpenTreeHandler {
 
 	constructor() {}
 
-	treeListChanged(list: Array<OpenTreeObj>) {
-		console.log('列表变更:', list);
-	}
-
-	handlerAdd(parents: Array<OpenTreeObj>, name: string): boolean {
-		console.log('增加:', name);
+	/**
+	 * 是否让sugar树增加元素
+	 * @param {Array<OpenTreeObj>} parents
+	 * @param {string} name
+	 * @returns {boolean}
+	 */
+	openTreeHandlerAdd(parents: Array<OpenTreeObj>, name: string): boolean {
 		return true;
 	}
 
-	handlerModify(parents: Array<OpenTreeObj>, item: OpenTreeObj): boolean {
-
-		console.log('修改:', item);
+	/**
+	 * 是否让sugar树改变元素
+	 * @param {Array<OpenTreeObj>} parents
+	 * @param {OpenTreeObj} item
+	 * @returns {boolean}
+	 */
+	openTreeHandlerModify(parents: Array<OpenTreeObj>, item: OpenTreeObj): boolean {
 		return true;
 	}
 
-	handlerRemove(parents: Array<OpenTreeObj>, item: OpenTreeObj): boolean {
-		console.log('删除:', item);
+	/**
+	 * 是否让sugar树删除元素
+	 * @param {Array<OpenTreeObj>} parents
+	 * @param {OpenTreeObj} item
+	 * @returns {boolean}
+	 */
+	openTreeHandlerRemove(parents: Array<OpenTreeObj>, item: OpenTreeObj): boolean {
 		return true;
 	}
 
-	handlerItemClick(parents: Array<OpenTreeObj>, item: OpenTreeObj): void {
+	/**
+	 * sugar树元素点击监听
+	 * @param {Array<OpenTreeObj>} parents
+	 * @param {OpenTreeObj} item
+	 */
+	openTreeHandlerItemClick(parents: Array<OpenTreeObj>, item: OpenTreeObj): void {
+
 		console.log(parents, item);
+	}
+
+	/**
+	 * sugar树元素变更监听
+	 * @param {Array<OpenTreeObj>} treeList
+	 */
+	openTreeListChanged(treeList: Array<OpenTreeObj>): void {
 	}
 
 }
