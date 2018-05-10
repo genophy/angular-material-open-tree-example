@@ -174,6 +174,10 @@ export class OpenTreeItemComponent implements OnInit {
 	 * @param {OpenTreeObj} item
 	 */
 	btnModifyCurrentItem(item: OpenTreeObj) {
+		// 先让同级元素的可编辑状态都置位，防止同时在同级打开多个可编辑输入框
+		for (const child of this.treeList) {
+			child.editable = false;
+		}
 		this._nameForModify = item.name;
 		item.editable = true;
 	}
