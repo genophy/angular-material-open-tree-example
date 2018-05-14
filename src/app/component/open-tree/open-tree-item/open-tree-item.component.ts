@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {OpenTreeObj} from './open-tree-obj';
+import {OpenTreeObj, OpenTreeObjHMap} from './open-tree-obj';
 
 @Component({
 	selector: 'crm-open-tree-item',
@@ -46,7 +46,7 @@ export class OpenTreeItemComponent implements OnInit {
 	/**
 	 * 元素点击方法
 	 */
-	@Input() handlerItemClick: Function;
+	@Output() handlerItemClick: EventEmitter<OpenTreeObjHMap> = new EventEmitter<OpenTreeObjHMap>();
 
 	/**
 	 * 树列表变更
@@ -88,6 +88,7 @@ export class OpenTreeItemComponent implements OnInit {
 	 */
 	_removeAble = false;
 
+
 	/**
 	 * 构造方法
 	 */
@@ -111,6 +112,7 @@ export class OpenTreeItemComponent implements OnInit {
 		} else if ('boolean' === typeof this.handlerModify) { // 传真错误，必须传入方法名
 			throw new Error('传入的handlerModify，必须是方法名。如 [handlerModify]="fn"，不可传入"fn()"等方法');
 		}
+
 		if ('function' === typeof this.handlerRemove) {
 			this._removeAble = true;
 		} else if ('boolean' === typeof this.handlerRemove) { // 传真错误，必须传入方法名
@@ -146,9 +148,7 @@ export class OpenTreeItemComponent implements OnInit {
 	 * @param {OpenTreeObj} item
 	 */
 	btnItemClick(item: OpenTreeObj) {
-		if ('function' === typeof this.handlerItemClick) {
-			this.handlerItemClick(this.parentObjs, item);
-		}
+		this.handlerItemClick.emit(OpenTreeObjHMap.newInstance(this.parentObjs, item));
 	}
 
 	/**
@@ -241,7 +241,11 @@ export class OpenTreeItemComponent implements OnInit {
 
 		this.itemIterationForUpdateChecked(item, checked, childChange);
 		this.sendAllChildCheckStatusEvent();
-		this.treeListChanged.emit(this.treeList);
+		// 若是手动点击切换，则发送emit
+		if (childChange) {
+			this.treeListChanged.emit(this.treeList);
+		}
+
 	}
 
 	/**

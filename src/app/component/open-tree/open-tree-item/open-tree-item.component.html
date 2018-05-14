@@ -53,12 +53,12 @@
 			<crm-open-tree-item
 				[parentObjs]="parentObjs | arrayPush:pureItem(item)"
 				[treeList]="item.children"
-				[handlerItemClick]="handlerItemClick"
 				[handlerModify]="handlerModify"
 				[handlerAdd]="handlerAdd"
 				[handlerRemove]="handlerRemove"
 				[childrenHierarchy]="childrenHierarchy?childrenHierarchy-1:childrenHierarchy"
 				[checkboxAble]="checkboxAble"
+				(handlerItemClick)="handlerItemClick.emit($event)"
 				(treeListChanged)="changeItemTreeList(item,$event)"
 				(allCheckedChanged)="toggleCheckbox(item,$event)"></crm-open-tree-item>
 		</div>

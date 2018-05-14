@@ -126,3 +126,17 @@ export class OpenTreeObj {
 		);
 	}
 }
+
+export class OpenTreeObjHMap {
+	parentObjs: Array<OpenTreeObj>;
+	item: OpenTreeObj;
+
+	constructor(parentObjs: Array<OpenTreeObj>, item: OpenTreeObj) {
+		this.parentObjs = parentObjs;
+		this.item = item;
+	}
+
+	static newInstance(parentObjs: Array<OpenTreeObj>, item: OpenTreeObj) {
+		return new OpenTreeObjHMap(parentObjs, item);
+	}
+}

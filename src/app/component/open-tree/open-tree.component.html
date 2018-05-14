@@ -1,7 +1,8 @@
-<crm-open-tree-item [handlerItemClick]="openTreeHandlerItemClick"
-					[handlerRemove]="openTreeHandlerRemove"
-					[handlerAdd]="openTreeHandlerAdd"
-					[handlerModify]="openTreeHandlerModify"
+<crm-open-tree-item (handlerItemClick)="openTreeHandlerItemClick($event)"
+					[handlerRemove]="openTreeHandlerRemove()"
+					[handlerAdd]="openTreeHandlerAdd()"
+					[handlerModify]="openTreeHandlerModify()"
 					[checkboxAble]="true"
-					[childrenHierarchy]="2" (treeListChanged)="openTreeHandlerItemClick($event)"
+					[childrenHierarchy]="2"
+					(treeListChanged)="openTreeListChanged($event)"
 					[treeList]="treeList"></crm-open-tree-item>
